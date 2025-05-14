@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { device_id } = req.body;
 
     try {
-      const result = await fetch(`${process.env.BACKEND_URL}/devices/${device_id}/open_box`, {
+      const result = await fetch(\`\${process.env.BACKEND_URL}/devices/\${device_id}/open_box\`, {
         method: 'POST'
       });
 
