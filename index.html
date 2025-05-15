@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Paczkomat Frontend</title>
+</head>
+<body>
+  <h1>Otwórz skrytkę</h1>
+  <input id="device_id" placeholder="device_id" />
+  <input id="device_token" placeholder="deviceToken" />
+  <button onclick="openBox()">Wyślij komendę</button>
+  <pre id="response"></pre>
+
+  <script>
+    async function openBox() {
+      const device_id = document.getElementById('device_id').value;
+      const deviceToken = document.getElementById('device_token').value;
+
+      const payload = {
+        operationType: "SEND",
+        generatedPackageId: "123456789012345",
+        qrParcelMachine: device_id,
+        instructionCode: "901",
+        oppDate: new Date().toISOString(),
+        deviceToken
+      };
+
+      const res = await fetch(`https://paczkomat-backend-production.up.railway.app/devices/${device_id}/open_box`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      document.getElementById('response').textContent = await res.text();
+    }
+  </script>
+</body>
+</html>
