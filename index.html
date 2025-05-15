@@ -8,6 +8,11 @@
   <h1>Otwórz skrytkę</h1>
   <input id="device_id" placeholder="device_id" />
   <input id="device_token" placeholder="deviceToken" />
+  <select id="instruction_code">
+    <option value="901">901 – Open</option>
+    <option value="902">902 – Re-open</option>
+    <option value="999">999 – Reset</option>
+  </select>
   <button onclick="openBox()">Wyślij komendę</button>
   <pre id="response"></pre>
 
@@ -15,12 +20,13 @@
     async function openBox() {
       const device_id = document.getElementById('device_id').value;
       const deviceToken = document.getElementById('device_token').value;
+      const instructionCode = document.getElementById('instruction_code').value;
 
       const payload = {
         operationType: "SEND",
         generatedPackageId: "123456789012345",
         qrParcelMachine: device_id,
-        instructionCode: "901",
+        instructionCode,
         oppDate: new Date().toISOString(),
         deviceToken
       };
