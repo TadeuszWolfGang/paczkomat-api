@@ -16,6 +16,17 @@
   <button onclick="openBox()">Wyślij komendę</button>
   <pre id="response"></pre>
 
+  <h1>Sprawdź status urządzenia</h1>
+  <input id="status_device_id" placeholder="device_id" />
+  <button onclick="getStatus()">Pobierz status</button>
+  <pre id="status_response"></pre>
+
+  <h1>Zgłoś paczkę do odbioru</h1>
+  <input id="pickup_device_id" placeholder="device_id" />
+  <input id="pickup_device_token" placeholder="deviceToken" />
+  <button onclick="pickupReady()">Zgłoś odbiór</button>
+  <pre id="pickup_response"></pre>
+
   <script>
     async function openBox() {
       const device_id = document.getElementById('device_id').value;
@@ -37,7 +48,51 @@
         body: JSON.stringify(payload)
       });
 
-      document.getElementById('response').textContent = await res.text();
+      const text = await res.text();
+      try {
+        document.getElementById('response').textContent = JSON.stringify(JSON.parse(text), null, 2);
+      } catch (e) {
+        document.getElementById('response').textContent = text;
+      }
+    }
+
+    async function getStatus() {
+      const device_id = document.getElementById('status_device_id').value;
+
+      const res = await fetch(`https://paczkomat-backend-production.up.railway.app/devices/${device_id}/status`, {
+        method: 'GET'
+      });
+
+      const text = await res.text();
+      try {
+        document.getElementById('status_response').textContent = JSON.stringify(JSON.parse(text), null, 2);
+      } catch (e) {
+        document.getElementById('status_response').textContent = text;
+      }
+    }
+
+    async function pickupReady() {
+      const device_id = document.getElementById('pickup_device_id').value;
+      const deviceToken = document.getElementById('pickup_device_token').value;
+
+      const payload = {
+        generatedPackageId: "123456789012345",
+        status: "5",
+        deviceToken
+      };
+
+      const res = await fetch(`https://paczkomat-backend-production.up.railway.app/devices/${device_id}/pickup_ready`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const text = await res.text();
+      try {
+        document.getElementById('pickup_response').textContent = JSON.stringify(JSON.parse(text), null, 2);
+      } catch (e) {
+        document.getElementById('pickup_response').textContent = text;
+      }
     }
   </script>
 </body>
